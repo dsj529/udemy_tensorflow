@@ -94,17 +94,9 @@ class CifarHelper():
 
         
     def next_batch(self, batch_size):
-        # # Note that the 100 dimension in the reshape call is set by an assumed batch size of 100
-        # print('now at index {}'.format(self.i))
-        # x = self.training_images[self.i:self.i+batch_size]
-        # y = self.training_labels[self.i:self.i+batch_size]
-        # self.i = (self.i + batch_size) % len(self.training_images)
-        # return x, y
-        
         for idx in range(0, len(self.training_images), batch_size):
-            print('now at index {}'.format(idx))
             yield (self.training_images[idx:idx+batch_size],
-                    self.training_labels[idx:idx+batch_size])
+                   self.training_labels[idx:idx+batch_size])
             
     
 ch = CifarHelper()
@@ -176,7 +168,7 @@ with tf.Session() as sess:
     sess.run(init)
     
     for i in range(steps):
-        # batch = ch.next_batch(batch_size)
+#         batch = ch.next_batch(batch_size)
         for batch in ch.next_batch(batch_size):
             sess.run(train, feed_dict={x:batch[0], y_true:batch[1], hold_prob:0.5})
         
