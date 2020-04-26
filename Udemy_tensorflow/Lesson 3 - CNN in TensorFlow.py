@@ -17,7 +17,7 @@ import tensorflow as tf
 ## MNIST Classification -- DNN approach
 
 from tensorflow.examples.tutorials.mnist import input_data
-mnist = input_data.read_data_sets("MNIST_data/", one_hot=True)
+mnist = input_data.read_data_sets("data/MNIST_data/", one_hot=True)
 
 # PLACEHOLDERS
 x = tf.placeholder(tf.float32, shape=[None, 784])
@@ -107,7 +107,7 @@ hold_prob = tf.placeholder(tf.float32)
 x_image = tf.reshape(x, [-1, 28, 28, 1])
 convo_1 = convolution_layer(x_image, shape=[5,5,1,32])
 convo_1_pool = max_pool_2x2(convo_1)
-convo_2 = convolution_layer(convo_1_pool, shape=[5,5,32, 64])
+convo_2 = convolution_layer(convo_1_pool, shape=[5,5,32,64])
 convo_2_pool = max_pool_2x2(convo_2)
 convo_2_flat = tf.reshape(convo_2_pool, [-1, 7*7*64])
 dense_1 = tf.nn.relu(dense_layer(convo_2_flat, 1024))

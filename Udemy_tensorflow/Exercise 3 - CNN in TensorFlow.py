@@ -11,7 +11,7 @@ import tensorflow as tf
 #%%
 ## Exercise: CIFAR-10 Classification
 # Access and unpack the data
-CIFAR_DIR = 'CIFAR_data/'
+CIFAR_DIR = 'data/CIFAR_data/'
 
 def unpickle(file):
     import pickle
