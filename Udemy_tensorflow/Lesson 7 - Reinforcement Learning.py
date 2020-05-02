@@ -5,83 +5,77 @@ Created on Sat Apr 25 19:57:26 2020
 
 @author: dsj529
 """
+import gym
+import numpy as np
+import tensorflow as tf
 
 
 #%%
 # Simple rule-based game play
-# =============================================================================
-# import gym
-# env = gym.make('CartPole-v0')
-# 
-# obs = env.reset()
-# 
-# for t in range(1000):
-#     env.render()
-#     cart_pos, cart_v, pole_ang, ang_v = obs
-#     if pole_ang > 0:
-#         action = 1
-#     else:
-#         action = 0
-#         
-#     obs, reward, done, info = env.step(action)
-#     if done:
-#         break
-#             
-# env.close()
-# =============================================================================
+
+
+env = gym.make('CartPole-v0')
+ 
+obs = env.reset()
+ 
+for t in range(1000):
+    env.render()
+    cart_pos, cart_v, pole_ang, ang_v = obs
+    if pole_ang > 0:
+        action = 1
+    else:
+        action = 0
+         
+    obs, reward, done, info = env.step(action)
+    if done:
+        break
+             
+env.close()
     
 #%%
-# =============================================================================
-# # DNN-informed game play
-# import tensorflow as tf
-# import gym
-# import numpy as np
-# 
-# num_inputs = 4
-# num_hidden = 4
-# num_outputs = 1
-# 
-# initializer = tf.contrib.layers.variance_scaling_initializer()
-# 
-# X = tf.placeholder(tf.float32, shape=[None, num_inputs])
-# 
-# hidden_1 = tf.layers.dense(X, num_hidden, activation=tf.nn.relu, kernel_initializer=initializer)
-# hidden_2 = tf.layers.dense(hidden_1, num_hidden, activation=tf.nn.relu, kernel_initializer=initializer)
-# output = tf.layers.dense(hidden_2, num_outputs, activation=tf.nn.sigmoid, kernel_initializer=initializer)
-# 
-# probs = tf.concat(axis=1, values=[output, 1-output])
-# action = tf.multinomial(probs, num_samples=1)
-# 
-# init = tf.global_variables_initializer()
-# 
-# eps = 50
-# step_limit = 500
-# env = gym.make('CartPole-v0')
-# avg_steps = []
-# 
-# with tf.Session() as sess:
-#     init.run()
-#     
-#     for i_episode in range(eps):
-#         obs = env.reset()
-#         
-#         for step in range(step_limit):
-#             action_val=action.eval(feed_dict={X:obs.reshape(1, num_inputs)})
-#             obs, reward, done, info = env.step(action_val[0][0])
-#             
-#             if done:
-#                 avg_steps.append(step)
-#                 break
-#         print('ep: {} || {} || {:.2f} (+/- {:.2f})'
-#                   .format(i_episode, step, np.mean(avg_steps), np.std(avg_steps)))
-# env.close()
-# =============================================================================
+# DNN-informed game play
+ 
+num_inputs = 4
+num_hidden = 4
+num_outputs = 1
+ 
+initializer = tf.contrib.layers.variance_scaling_initializer()
+ 
+X = tf.placeholder(tf.float32, shape=[None, num_inputs])
+ 
+hidden_1 = tf.layers.dense(X, num_hidden, activation=tf.nn.relu, kernel_initializer=initializer)
+hidden_2 = tf.layers.dense(hidden_1, num_hidden, activation=tf.nn.relu, kernel_initializer=initializer)
+output = tf.layers.dense(hidden_2, num_outputs, activation=tf.nn.sigmoid, kernel_initializer=initializer)
+ 
+probs = tf.concat(axis=1, values=[output, 1-output])
+action = tf.multinomial(probs, num_samples=1)
+ 
+init = tf.global_variables_initializer()
+ 
+eps = 50
+step_limit = 500
+env = gym.make('CartPole-v0')
+avg_steps = []
+ 
+with tf.Session() as sess:
+    init.run()
+     
+    for i_episode in range(eps):
+        obs = env.reset()
+         
+        for step in range(step_limit):
+            action_val=action.eval(feed_dict={X:obs.reshape(1, num_inputs)})
+            obs, reward, done, info = env.step(action_val[0][0])
+             
+            if done:
+                avg_steps.append(step)
+                break
+        print('ep: {} || {} || {:.2f} (+/- {:.2f})'
+                  .format(i_episode, step, np.mean(avg_steps), np.std(avg_steps)))
+env.close()
 
 #%%
 # Policy gradient-informed game play
-import tensorflow as tf
-import gym
-import numpy as np
 
 tf.reset_default_graph()
 
